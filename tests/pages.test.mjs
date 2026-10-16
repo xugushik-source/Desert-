@@ -23,7 +23,7 @@ test('Pages exports public synthetic catalogues only and refuses all writes', as
     await assert.rejects(pagesApi('cities', {}), {code:'PAGES_READ_ONLY'});
     await assert.rejects(pagesApi('manage/orders'), {code:'PAGES_READ_ONLY'});
     const html = await fs.readFile(path.join(dir,'index.html'),'utf8');
-    assert.ok(html.includes('src="./app.js"'));
+    assert.match(html,/src="\.\/app\.[a-f0-9]{16}\.js"/);
     const app = await fs.readFile(path.join(dir,'app.js'),'utf8');
     assert.ok(app.includes('async function checkout() { return pagesNotice();'));
     assert.ok(app.includes('async function cabinet() { return pagesNotice();'));

@@ -52,7 +52,7 @@ fs.copyFileSync(
   path.join(target, "dist/.openai/hosting.json"),
 );
 // Preserve the deployed first migration byte-for-byte; append a second migration.
-const migrationFiles=[['0001_marketplace.sql','0000_marketplace',1792108800000],['0002_promotions_settlements.sql','0001_promotions_settlements',1792152000000]];
+const migrationFiles=[['0001_marketplace.sql','0000_marketplace',1792108800000],['0002_promotions_settlements.sql','0001_promotions_settlements',1792152000000],['0003_order_margin_gate.sql','0002_order_margin_gate',1792166400000]];
 for(const [file,tag] of migrationFiles) fs.copyFileSync(path.join(root,'migrations',file),path.join(target,'dist/.openai/drizzle',tag+'.sql'));
 fs.writeFileSync(path.join(target,'dist/.openai/drizzle/meta/_journal.json'),JSON.stringify({version:'7',dialect:'sqlite',entries:migrationFiles.map(([,tag,when],idx)=>({idx,version:'6',when,tag,breakpoints:false}))}));
 console.log(

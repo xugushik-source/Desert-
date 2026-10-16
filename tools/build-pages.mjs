@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import { build } from "esbuild";
 import { migrateLocal } from "./migrate-local.mjs";
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -49,6 +51,14 @@ export async function buildPages(output = new URL('../dist/pages/', import.meta.
   app = app.replace('async function api(path, body)', `function pagesNotice() { modal('DESERTO', '<p>' + esc(t('demo')) + '</p>'); }\nasync function api(path, body)`);
   app = app.replaceAll('/media/', './media/');
   await fs.writeFile(path.join(out, 'app.js'), app);
+  // Bundle and fingerprint the complete module graph so GitHub/CDN caches cannot mix releases.
+  const bundled=await build({entryPoints:[path.join(out,'app.js')],bundle:true,format:'esm',platform:'browser',target:'es2022',write:false});
+  const script=bundled.outputFiles[0].text,scriptName='app.'+createHash('sha256').update(script).digest('hex').slice(0,16)+'.js';
+  await fs.writeFile(path.join(out,scriptName),script);
+  const css=await fs.readFile(path.join(out,'app.css'),'utf8'),cssName='app.'+createHash('sha256').update(css).digest('hex').slice(0,16)+'.css';
+  await fs.writeFile(path.join(out,cssName),css);
+  html=html.replace('./app.js','./'+scriptName).replace('./app.css','./'+cssName);
+  await fs.writeFile(path.join(out,'index.html'),html);
   await fs.writeFile(path.join(out, '.nojekyll'), '');
   return out;
 }

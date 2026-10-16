@@ -1,4 +1,4 @@
-import { listPromotions } from "./marketplace.mjs";
+import { listPromotions, orderEconomics } from "./marketplace.mjs";
 import {
   fail,
   integer,
@@ -224,7 +224,9 @@ async function priceLines(db, vendor, items) {
     const campaign=await q(db,"SELECT * FROM promotions WHERE product_id=? AND state='ACTIVE'",p.id).first();
     if(campaign && (p.price!==campaign.sale_price || options.length)) fail("PRICE_CHANGED",409);
     const gift=campaign?.kind==='GIFT' ? " [Подарок: "+(jsonParse(campaign.gift,{}).ru||'')+"]" : '';
-    const note = (row.note === undefined ? "" : text(row.note, 120))+gift,
+    const rawNote=row.note===undefined?'':row.note;
+    const baseNote=gift && typeof rawNote==='string' && rawNote.endsWith(gift)?rawNote.slice(0,-gift.length):rawNote;
+    const note = text(baseNote,120)+gift,
       key = JSON.stringify([p.id, chosen, note]);
     const existing = lines.find((l) => l.key === key);
     if (existing) {
@@ -408,6 +410,7 @@ export async function createOrder(env, b) {
   const expected =
     priced.total + (b.fulfillment === "delivery" ? v.delivery_fee : 0);
   if (integer(b.expected_total) !== expected) fail("PRICE_CHANGED", 409);
+  const pricingCheck=await orderEconomics(db,v,priced.total,b.fulfillment==='delivery'?v.delivery_fee:0,priced.lines);
   const id = "DS-" + uuid().replaceAll("-", "").slice(0, 16).toUpperCase(),
     key = await orderKey(env, id),
     at = now(),
@@ -429,6 +432,7 @@ export async function createOrder(env, b) {
       b.minute,
     ),
   ];
+  if(pricingCheck) statements.push(q(db,'UPDATE vendor_terms SET version=version WHERE vendor_id=? AND version=?',v.id,pricingCheck.terms_version),guard(db));
   for (const [pid, qty] of priced.counts)
     statements.push(
       q(
@@ -466,6 +470,7 @@ export async function createOrder(env, b) {
       expected === 0 ? "PAID" : "UNPAID",
     ),
   );
+  if(pricingCheck) statements.push(q(db,'INSERT INTO order_pricing_checks(order_id,vendor_id,terms_version,revenue,expenses,net,required_net) VALUES(?,?,?,?,?,?,?)',id,v.id,pricingCheck.terms_version,expected,JSON.stringify(pricingCheck.expenses),pricingCheck.net,pricingCheck.required_net));
   for (const l of priced.lines)
     statements.push(
       q(
@@ -832,6 +837,8 @@ export async function approve(env, b) {
     if (priced.total + o.delivery_fee !== proposal.total)
       fail("PRICE_CHANGED", 409);
     const v = await vendorRecord(db, o.vendor_id);
+    const economicsCheck=await orderEconomics(db,v,priced.total,o.delivery_fee,priced.lines);
+    if(economicsCheck)statements.push(q(db,'UPDATE vendor_terms SET version=version WHERE vendor_id=? AND version=?',v.id,economicsCheck.terms_version),guard(db),q(db,'INSERT INTO order_pricing_checks(order_id,vendor_id,terms_version,revenue,expenses,net,required_net) VALUES(?,?,?,?,?,?,?) ON CONFLICT(order_id) DO UPDATE SET terms_version=excluded.terms_version,revenue=excluded.revenue,expenses=excluded.expenses,net=excluded.net,required_net=excluded.required_net',o.id,v.id,economicsCheck.terms_version,priced.total+o.delivery_fee,JSON.stringify(economicsCheck.expenses),economicsCheck.net,economicsCheck.required_net));
     validateSlot(v, o.day, o.minute, Math.max(v.lead_minutes, priced.lead));
     for (const [pid, qty] of priced.counts)
       statements.push(

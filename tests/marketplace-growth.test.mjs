@@ -101,3 +101,27 @@ test('event cake selection is idempotent, keeps existing basket items and all ne
  assert.deepEqual(eventCart(a,p,'Birthday · 2026-10-20'),a);assert.equal(a.length,2);assert.equal(original.length,1);
  assert.deepEqual(Object.keys(extraWords.ru).sort(),Object.keys(extraWords.ka).sort());assert.deepEqual(Object.keys(extraWords.ru).sort(),Object.keys(extraWords.en).sort());
 });
+test('non-demo checkout requires known expense ceilings and rejects margin below 10% before reserving stock',async()=>{
+ const f=await fixture();try{
+ f.db.exec("UPDATE vendors SET demo=0 WHERE id='sweet-house'");
+ const payload={idem:crypto.randomUUID(),city_id:'akhalkalaki',vendor_id:'sweet-house',items:[{product_id:'sweet-house--medovik-slice',qty:1}],method:'cash',fulfillment:'pickup',day:new Date(Date.now()+2*86400000).toISOString().slice(0,10),minute:720,expected_total:1000,customer:{name:'DEMO',phone:'+99500000000'}};
+ assert.equal((await f.req('orders',payload)).data.error,'COSTS_REQUIRED');
+ const terms={command:crypto.randomUUID(),vendor_id:'sweet-house',version:0,seller_payout_bps:9000,expenses:{...costs(0),packaging:1},costs_confirmed:true,evidence:'DEMO contract and worst-case expense ceilings'};
+ assert.equal((await f.req('manage/terms',terms,f.cookies.seller)).status,403);
+ assert.equal((await f.req('manage/terms',terms,f.cookies.owner)).status,200);
+ assert.equal((await f.req('orders',payload)).data.error,'MARGIN_BELOW_MINIMUM');
+ assert.equal(f.db.sqlite.prepare('SELECT count(*) AS n FROM orders').get().n,0);
+ assert.equal((await f.req('manage/terms',{...terms,command:crypto.randomUUID(),version:1,seller_payout_bps:8000},f.cookies.owner)).status,200);
+ const created=await f.req('orders',{...payload,profit:1000000});assert.equal(created.status,201);
+ const check=f.db.sqlite.prepare('SELECT * FROM order_pricing_checks WHERE order_id=?').get(created.data.id);assert.equal(check.net,199);assert.equal(check.required_net,100);
+ assert.equal((await f.req('manage/terms?vendor=sweet-house',undefined,f.cookies.seller)).status,403);
+ const proposal=await f.req('manage/action',{id:created.data.id,version:created.data.version,command_id:crypto.randomUUID(),action:'propose',reason:'DEMO changed quantity',items:[{product_id:'sweet-house--medovik-slice',qty:2}]},f.cookies.owner);
+ assert.equal(proposal.status,200);
+ await f.req('manage/terms',{...terms,command:crypto.randomUUID(),version:2,seller_payout_bps:10000},f.cookies.owner);
+ const pending=(await f.req('order/view',{id:created.data.id,key:created.data.key})).data;
+ const approval=await f.req('order/approve',{id:created.data.id,key:created.data.key,version:pending.version,proposal_id:pending.proposal.id,approved:true});
+ assert.equal(approval.data.error,'MARGIN_BELOW_MINIMUM');
+ assert.equal(f.db.sqlite.prepare('SELECT total FROM orders WHERE id=?').get(created.data.id).total,1000);
+
+ }finally{f.db.close()}
+});

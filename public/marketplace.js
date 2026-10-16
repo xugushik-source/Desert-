@@ -12,3 +12,7 @@ export function eventCart(existing, product, note) {
  if(at>=0) rows[at]=line; else rows.push(line);
  return rows.slice(-30);
 }
+
+Object.assign(extraWords.ru,{terms:'Условия доходности заказов',payoutRate:'Кондитерской, % от стоимости товаров',termsHint:'Лимиты остальных расходов на один заказ. При подключённых условиях сервер отклоняет заказ и замену с плановым доходом ниже 10%. Для нетестовой кондитерской условия обязательны.',termsSave:'Сохранить условия',termsSaved:'Условия сохранены',termsMissing:'Условия не заполнены. Доступны только тестовые заказы.'});
+Object.assign(extraWords.en,{terms:'Order income terms',payoutRate:'Bakery payout, % of item value',termsHint:'Expense ceilings per order. With configured terms, the server rejects orders and replacements below forecast 10%. Required for non-demo bakeries.',termsSave:'Save terms',termsSaved:'Terms saved',termsMissing:'Terms are missing. Only demonstration orders are available.'});
+Object.assign(extraWords.ka,{terms:'შეკვეთის მომგებიანობის პირობები',payoutRate:'საკონდიტროს წილი, % პროდუქტების თანხიდან',termsHint:'ხარჯის ლიმიტები შეკვეთაზე. პირობების არსებობისას სერვერი უარყოფს შეკვეთას და ჩანაცვლებას 10%-ზე დაბალი პროგნოზით. აუცილებელია არატესტური საკონდიტროებისთვის.',termsSave:'პირობების შენახვა',termsSaved:'პირობები შენახულია',termsMissing:'პირობები არ არის შევსებული. ხელმისაწვდომია მხოლოდ სატესტო შეკვეთები.'});

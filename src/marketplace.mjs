@@ -3,7 +3,7 @@ const q = (db, sql, ...p) => db.prepare(sql).bind(...p);
 const guard = db => db.prepare('INSERT INTO write_guards(value) VALUES(changes())');
 export const expenseKeys = ['seller_payout','delivery','payment','packaging','gift','tax','marketing','overhead','reserve','other'];
 export function economics(revenue, costs) {
-  integer(revenue, 1);
+  integer(revenue, 0);
   if (!costs || typeof costs !== 'object' || Array.isArray(costs)) fail('COSTS_REQUIRED');
   let total = 0;
   for (const key of expenseKeys) {
@@ -107,4 +107,32 @@ export async function settlementAction(db,b,user) {
   if(prior) statements.push(q(db,'UPDATE settlements SET expenses=?,total_expenses=?,net=?,required_net=?,state=?,evidence=?,actor=?,at=?,version=? WHERE order_id=? AND version=?',JSON.stringify(b.expenses),calculation.total_expenses,calculation.net,calculation.required_net,state,evidence,user.id,now(),version,o.id,prior.version),guard(db));
   else statements.push(q(db,'INSERT INTO settlements(order_id,vendor_id,revenue,expenses,total_expenses,net,required_net,state,evidence,actor,at,version) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',o.id,o.vendor_id,o.total,JSON.stringify(b.expenses),calculation.total_expenses,calculation.net,calculation.required_net,state,evidence,user.id,now(),version));
   return commit(db,statements,ctx,user,o.vendor_id,'SETTLEMENT_RECORDED',{order_id:o.id,...calculation,state,version});
+}
+export async function termsAction(db,b,user) {
+ if(!user?.owner) fail('FORBIDDEN',403);
+ const ctx=await replay(db,b,user);if(ctx.prior)return ctx.prior;
+ const vendor=await q(db,'SELECT id FROM vendors WHERE id=?',b.vendor_id).first();if(!vendor)fail('NOT_FOUND',404);
+ if(b.costs_confirmed!==true)fail('COSTS_REQUIRED');
+ const rate=integer(b.seller_payout_bps,0,10000),expenses={...b.expenses,seller_payout:0};
+ economics(1,expenses); // validate every ceiling; zero seller payout is replaced by the contractual rate per order.
+ const evidence=text(b.evidence,1000,true),prior=await q(db,'SELECT * FROM vendor_terms WHERE vendor_id=?',vendor.id).first();
+ if((prior?.version??0)!==integer(b.version))fail('CONFLICT',409);
+ const version=(prior?.version??0)+1,statements=[];
+ if(prior)statements.push(q(db,'UPDATE vendor_terms SET seller_payout_bps=?,expenses=?,evidence=?,actor=?,at=?,version=? WHERE vendor_id=? AND version=?',rate,JSON.stringify(expenses),evidence,user.id,now(),version,vendor.id,prior.version),guard(db));
+ else statements.push(q(db,'INSERT INTO vendor_terms(vendor_id,seller_payout_bps,expenses,evidence,actor,at,version) VALUES(?,?,?,?,?,?,?)',vendor.id,rate,JSON.stringify(expenses),evidence,user.id,now(),version));
+ return commit(db,statements,ctx,user,vendor.id,'VENDOR_TERMS_UPDATED',{vendor_id:vendor.id,version});
+}
+export async function orderEconomics(db,vendor,itemsTotal,deliveryFee,lines) {
+ const terms=await q(db,'SELECT * FROM vendor_terms WHERE vendor_id=?',vendor.id).first();
+ if(!terms){if(vendor.demo)return null;fail('COSTS_REQUIRED',409);}
+ const expenses=jsonParse(terms.expenses,{});
+ expenses.seller_payout=Math.ceil(itemsTotal*terms.seller_payout_bps/10000);
+ // Include each unit's approved gift budget in addition to the order ceiling.
+ for(const line of lines){
+   const promo=await q(db,"SELECT budget FROM promotions WHERE product_id=? AND state='ACTIVE' AND kind='GIFT'",line.product_id).first();
+   if(promo)expenses.gift+=integer(jsonParse(promo.budget,{}).expenses?.gift)*line.qty;
+ }
+ const check=economics(itemsTotal+deliveryFee,expenses);
+ if(!check.eligible)fail('MARGIN_BELOW_MINIMUM',409);
+ return {terms_version:terms.version,expenses,...check};
 }

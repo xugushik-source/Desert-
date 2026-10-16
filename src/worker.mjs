@@ -1,4 +1,4 @@
-import { rankedVendors, listPromotions, promotionAction, settlementAction } from "./marketplace.mjs";
+import { rankedVendors, listPromotions, promotionAction, settlementAction, termsAction } from "./marketplace.mjs";
 import {
   Problem,
   fail,
@@ -237,6 +237,12 @@ export async function handle(req, env) {
       requireUser(user);
       if (p === "/api/manage/promotions" && req.method === "GET") return reply(await listPromotions(db,url.searchParams.get("vendor"),user));
       if (p === "/api/manage/promotion" && b) return reply(await promotionAction(db,b,user));
+      if (p === "/api/manage/terms" && b) return reply(await termsAction(db,b,user));
+      if (p === "/api/manage/terms" && req.method === "GET") {
+        if(!user.owner)fail('FORBIDDEN',403);
+        const terms=await q(db,'SELECT * FROM vendor_terms WHERE vendor_id=?',url.searchParams.get('vendor')).first();
+        return reply({terms:terms?{...terms,expenses:jsonParse(terms.expenses)}:null});
+      }
       if (p === "/api/manage/settlement" && b) return reply(await settlementAction(db,b,user));
       if (p === "/api/manage/settlements" && req.method === "GET") {
         if(!user.owner) fail("FORBIDDEN",403);

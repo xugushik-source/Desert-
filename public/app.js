@@ -717,6 +717,10 @@ document.addEventListener(
       case "promotion-form":
         await api('manage/promotion',{command:crypto.randomUUID(),action:'propose',vendor_id:state.adminVendor,product_id:b.product_id,kind:b.kind,discount_bps:Math.round(Number(b.discount)*100),titles:Object.fromEntries(['ru','ka','en'].map(l=>[l,b['title_'+l]])),gift:Object.fromEntries(['ru','ka','en'].map(l=>[l,b['gift_'+l]]))});
         closeModal();await renderCabinet();break;
+      case "terms-form": {
+        await api('manage/terms',{command:crypto.randomUUID(),vendor_id:state.adminVendor,version:Number(form.dataset.version),seller_payout_bps:Math.round(Number(b.rate)*100),expenses:Object.fromEntries(expenseKeys.map(k=>[k,k==='seller_payout'?0:Math.round(Number(b[k])*100)])),costs_confirmed:b.confirmed==='on',evidence:b.evidence});
+        await renderCabinet();toast(t('termsSaved'));break;
+      }
       case "promo-budget":
       case "settlement-form": {
         const expenses=Object.fromEntries(expenseKeys.map(k=>[k,Math.round(Number(b[k])*100)]));
@@ -1189,9 +1193,10 @@ async function renderPromotions(v,area) {
 }
 let settlementRows=[];
 async function renderSettlements(v,area) {
- const data=await api('manage/settlements?vendor='+encodeURIComponent(v.id));
+ const [data,config]=await Promise.all([api('manage/settlements?vendor='+encodeURIComponent(v.id)),api('manage/terms?vendor='+encodeURIComponent(v.id))]);
+ const terms=config.terms;
  settlementRows=data.orders.map(o=>({...o,record:data.records.find(r=>r.order_id===o.id)}));
- area.innerHTML=`<p class="notice">${t('marginHint')}</p>${settlementRows.map(o=>`<article class="admin-card"><h3>${esc(o.id)} · ${money(o.total)}</h3>${o.record?`<p>${t(o.record.state==='CLOSED'?'closedSettlement':'shortfall')}</p><p>${t('net')}: ${money(o.record.net)} · ${t('requiredNet')}: ${money(o.record.required_net)}</p>`:''}${o.record?.state==='CLOSED'?'':`<button class="primary" data-settle="${esc(o.id)}">${t('closeSettlement')}</button>`}</article>`).join('')||`<p>${t('noSettlements')}</p>`}`;
+ area.innerHTML=`<details class="admin-card"><summary>${t('terms')}</summary><p>${t('termsHint')}</p>${terms?'':`<p class="notice">${t('termsMissing')}</p>`}<form id="terms-form" data-version="${terms?.version||0}"><label class="field">${t('payoutRate')}<input name="rate" type="number" min="0" max="100" step="0.01" value="${terms?terms.seller_payout_bps/100:''}" required></label><div class="form-grid">${expenseKeys.filter(k=>k!=='seller_payout').map(k=>`<label class="field">${t(k)}, ₾<input name="${k}" type="number" min="0" max="1000000" step="0.01" value="${terms?terms.expenses[k]/100:''}" required></label>`).join('')}</div><label class="field">${t('evidence')}<textarea name="evidence" maxlength="1000" required>${esc(terms?.evidence||'')}</textarea></label><p><label><input name="confirmed" type="checkbox" required> ${t('costsConfirmed')}</label></p><button class="primary">${t('termsSave')}</button></form></details><p class="notice">${t('marginHint')}</p>${settlementRows.map(o=>`<article class="admin-card"><h3>${esc(o.id)} · ${money(o.total)}</h3>${o.record?`<p>${t(o.record.state==='CLOSED'?'closedSettlement':'shortfall')}</p><p>${t('net')}: ${money(o.record.net)} · ${t('requiredNet')}: ${money(o.record.required_net)}</p>`:''}${o.record?.state==='CLOSED'?'':`<button class="primary" data-settle="${esc(o.id)}">${t('closeSettlement')}</button>`}</article>`).join('')||`<p>${t('noSettlements')}</p>`}`;
 }
 
 async function boot() {

@@ -51,27 +51,10 @@ fs.copyFileSync(
   path.join(target, ".openai/hosting.json"),
   path.join(target, "dist/.openai/hosting.json"),
 );
-// Retain the project's existing schema-only SQLite migration; no seed data in migrations.
-fs.copyFileSync(
-  path.join(root, "migrations/0001_marketplace.sql"),
-  path.join(target, "dist/.openai/drizzle/0000_marketplace.sql"),
-);
-fs.writeFileSync(
-  path.join(target, "dist/.openai/drizzle/meta/_journal.json"),
-  JSON.stringify({
-    version: "7",
-    dialect: "sqlite",
-    entries: [
-      {
-        idx: 0,
-        version: "6",
-        when: 1792108800000,
-        tag: "0000_marketplace",
-        breakpoints: false,
-      },
-    ],
-  }),
-);
+// Preserve the deployed first migration byte-for-byte; append a second migration.
+const migrationFiles=[['0001_marketplace.sql','0000_marketplace',1792108800000],['0002_promotions_settlements.sql','0001_promotions_settlements',1792152000000]];
+for(const [file,tag] of migrationFiles) fs.copyFileSync(path.join(root,'migrations',file),path.join(target,'dist/.openai/drizzle',tag+'.sql'));
+fs.writeFileSync(path.join(target,'dist/.openai/drizzle/meta/_journal.json'),JSON.stringify({version:'7',dialect:'sqlite',entries:migrationFiles.map(([,tag,when],idx)=>({idx,version:'6',when,tag,breakpoints:false}))}));
 console.log(
   "Packaged DESERTO Worker with " +
     Object.keys(assets).length +

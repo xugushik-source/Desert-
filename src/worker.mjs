@@ -1,3 +1,4 @@
+import { rankedVendors, listPromotions, promotionAction, settlementAction } from "./marketplace.mjs";
 import {
   Problem,
   fail,
@@ -165,13 +166,7 @@ export async function handle(req, env) {
       });
     }
     if (p === "/api/vendors" && req.method === "GET") {
-      const rows = (
-        await q(
-          db,
-          "SELECT v.*,c.currency,c.timezone FROM vendors v JOIN cities c ON c.id=v.city_id WHERE v.active=1 AND c.active=1 AND v.city_id=? ORDER BY v.id",
-          url.searchParams.get("city"),
-        ).all()
-      ).results;
+      const rows = await rankedVendors(db, url.searchParams.get("city"));
       return reply({ vendors: rows.map(vendorPublic) });
     }
     if (p === "/api/catalog" && req.method === "GET")
@@ -237,8 +232,19 @@ export async function handle(req, env) {
       }
       return reply({ ok: true });
     }
+    if (p === "/api/promotions" && req.method === "GET") return reply(await listPromotions(db, url.searchParams.get("vendor")));
     if (p.startsWith("/api/manage/")) {
       requireUser(user);
+      if (p === "/api/manage/promotions" && req.method === "GET") return reply(await listPromotions(db,url.searchParams.get("vendor"),user));
+      if (p === "/api/manage/promotion" && b) return reply(await promotionAction(db,b,user));
+      if (p === "/api/manage/settlement" && b) return reply(await settlementAction(db,b,user));
+      if (p === "/api/manage/settlements" && req.method === "GET") {
+        if(!user.owner) fail("FORBIDDEN",403);
+        const vendor=url.searchParams.get("vendor");
+        const orders=(await q(db,"SELECT id,total,currency,version FROM orders WHERE vendor_id=? AND status='COMPLETED' AND payment='PAID' ORDER BY updated_at DESC",vendor).all()).results;
+        const records=(await q(db,"SELECT * FROM settlements WHERE vendor_id=? ORDER BY at DESC",vendor).all()).results;
+        return reply({orders,records:records.map(r=>({...r,expenses:jsonParse(r.expenses)}))});
+      }
       if (p === "/api/manage/vendors" && req.method === "GET") {
         const rows = (
           await db
@@ -280,6 +286,8 @@ export async function handle(req, env) {
           b.vendor_id,
         ).first();
         if (!product) fail("NOT_FOUND", 404);
+        const activePromotion=await q(db,"SELECT id FROM promotions WHERE product_id=? AND state='ACTIVE'",product.id).first();
+        if(activePromotion && b.price!==product.price) fail("PROMOTION_ACTIVE",409);
         const price = integer(b.price),
           stock = integer(b.stock, product.reserved, 100000),
           title = names(b.names),

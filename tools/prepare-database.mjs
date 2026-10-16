@@ -1,3 +1,4 @@
+import { migrateLocal } from "./migrate-local.mjs";
 // Produces a NEW demo database bootstrap. Never exports an existing database.
 import fs from "node:fs";
 import path from "node:path";
@@ -18,9 +19,7 @@ const config = {
   RECOVERY_SECRET: token(),
 };
 const db = new LocalD1();
-db.exec(
-  fs.readFileSync(path.join(root, "migrations/0001_marketplace.sql"), "utf8"),
-);
+migrateLocal(db);
 await seed(db);
 await createUser(db, {
   email: config.email,

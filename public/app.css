@@ -1060,3 +1060,7 @@ button.primary:hover:not(:disabled),
 .cartbar button:hover {
   background: #e3b8b4;
 }
+.occasion-banner {margin:2rem 0;padding:2rem;border:1px solid var(--line,#e9c7c4);background:#f6e4e1;border-radius:1rem}
+.occasion-banner h2 {font-size:clamp(1.6rem,4vw,2.5rem)}
+.event-photo {width:100%;height:240px;object-fit:cover;border-radius:1rem;margin:1rem 0}
+.vendor-card .field {margin:1rem 0}

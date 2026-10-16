@@ -1,3 +1,4 @@
+import { migrateLocal } from "../tools/migrate-local.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -6,12 +7,7 @@ import { seed } from "../tools/seed.mjs";
 import { privateSession } from "../src/sites-session.mjs";
 function database() {
   const db = new LocalD1();
-  db.exec(
-    fs.readFileSync(
-      new URL("../migrations/0001_marketplace.sql", import.meta.url),
-      "utf8",
-    ),
-  );
+  migrateLocal(db);
   return db;
 }
 test("private Sites binds one authenticated owner and cannot transfer ownership", async () => {

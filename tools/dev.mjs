@@ -1,3 +1,4 @@
+import { migrateLocal } from "./migrate-local.mjs";
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
@@ -9,9 +10,7 @@ import worker from "../src/worker.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 fs.mkdirSync(path.join(root, ".runtime"), { recursive: true });
 const db = new LocalD1(path.join(root, ".runtime", "deserto.sqlite"));
-db.exec(
-  fs.readFileSync(path.join(root, "migrations/0001_marketplace.sql"), "utf8"),
-);
+migrateLocal(db);
 await seed(db);
 const file = path.join(root, ".runtime", "local-access.json");
 let config;

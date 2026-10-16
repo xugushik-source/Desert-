@@ -1,4 +1,6 @@
+import {extraWords, expenseKeys, eventCart} from "./marketplace.js";
 import { words, categories, states } from "./i18n.js";
+for (const l of ['ru','ka','en']) Object.assign(words[l],extraWords[l]);
 const $ = (id) => document.getElementById(id),
   esc = (v) =>
     String(v ?? "").replace(
@@ -89,6 +91,8 @@ function toast(message) {
   toastTimer = setTimeout(() => $("toast").classList.remove("on"), 4500);
 }
 function error(e) {
+  if(["COSTS_REQUIRED","MARGIN_BELOW_MINIMUM","PROMOTION_OPTIONS"].includes(e.code)) return t("promoIssue");
+  if(e.code==="PROMOTION_ACTIVE") return t("promoUnavailable");
   return (
     {
       LOGIN_FAILED: t("loginError"),
@@ -195,7 +199,7 @@ async function home() {
   state.vendors = data.vendors;
   header();
   $("main").innerHTML =
-    `<section class="hero"><div><div class="eyebrow">${t("local")}</div><h1><span class="mask"><span>${t("hero1")}</span></span><span class="mask"><span><em>${t("hero2")}</em></span></span></h1><p>${t("heroText")}</p><button class="primary" data-act="explore">${t("explore")}</button></div><div class="hero-visual reveal"><img src="/media/red-velvet-slice.jpg" alt="${esc(cat("torty-kusok"))}" fetchpriority="high" width="500" height="550"><span class="hero-stamp">Deserto — ${esc(names(state.cities.find((c) => c.id === state.city)?.names))}</span></div></section><section class="section" id="shops"><div class="section-top"><div><div class="eyebrow">${esc(names(state.cities.find((c) => c.id === state.city)?.names))}</div><h2>${t("shops")}</h2></div><p class="muted small">${t("shopsText")}</p></div><div class="vendor-grid">${state.vendors.map((v) => `<article class="vendor-card reveal"><a href="#vendor=${encodeURIComponent(v.id)}&city=${encodeURIComponent(v.city_id)}"><div class="vendor-photo"><img src="${vendorPhoto(v)}" alt="${esc(names(v.names))}" loading="lazy" width="500" height="400"></div><span class="pill">${t("testShop")}</span><h3>${esc(names(v.names))}</h3><p>${esc(names(v.description))}</p><div class="vendor-bottom"><span class="small">${clock(v.open_minute)}–${clock(v.close_minute)}</span><span class="secondary">${t("openShop")}</span></div></a></article>`).join("") || `<p class="empty">${t("empty")}</p>`}</div></section><section class="manifesto"><h2>${t("storyTitle")}</h2><p>${t("storyText")}</p></section>`;
+    `<section class="hero"><div><div class="eyebrow">${t("local")}</div><h1><span class="mask"><span>${t("hero1")}</span></span><span class="mask"><span><em>${t("hero2")}</em></span></span></h1><p>${t("heroText")}</p><div class="actions"><button class="primary" data-act="occasion">${t("occasionOpen")}</button><button class="secondary" data-act="explore">${t("explore")}</button></div></div><div class="hero-visual reveal"><img src="/media/red-velvet-slice.jpg" alt="${esc(cat("torty-kusok"))}" fetchpriority="high" width="500" height="550"><span class="hero-stamp">Deserto — ${esc(names(state.cities.find((c) => c.id === state.city)?.names))}</span></div></section><section class="section" id="shops"><div class="section-top"><div><div class="eyebrow">${esc(names(state.cities.find((c) => c.id === state.city)?.names))}</div><h2>${t("shops")}</h2></div><p class="muted small">${t("ranking")}</p></div><div class="occasion-banner"><h2>${t("occasion")}</h2><p>${t("occasionText")}</p><div class="actions">${["birthday","holiday","celebration"].map(k=>`<button class="chip" data-occasion="${k}">${t(k)}</button>`).join("")}</div></div><div class="vendor-grid">${state.vendors.map((v) => `<article class="vendor-card reveal"><a href="#vendor=${encodeURIComponent(v.id)}&city=${encodeURIComponent(v.city_id)}"><div class="vendor-photo"><img src="${vendorPhoto(v)}" alt="${esc(names(v.names))}" loading="lazy" width="500" height="400"></div><span class="pill">${t("testShop")}</span><h3>${esc(names(v.names))}</h3><p>${esc(names(v.description))}</p><div class="vendor-bottom"><span class="small">${clock(v.open_minute)}–${clock(v.close_minute)}</span><span class="secondary">${t("openShop")}</span></div></a></article>`).join("") || `<p class="empty">${t("empty")}</p>`}</div></section><section class="manifesto"><h2>${t("storyTitle")}</h2><p>${t("storyText")}</p></section>`;
   cartbar();
   reveal();
 }
@@ -273,7 +277,7 @@ function renderProducts() {
     rows
       .map(
         (p) =>
-          `<article class="product reveal${!p.available ? " unavailable" : ""}"><button class="product-image" data-product="${esc(p.id)}" aria-label="${esc(names(p.names))}"><img src="${esc(p.image)}" alt="${esc(names(p.names))}" width="400" height="420" loading="lazy"></button><h3>${esc(names(p.names))}</h3><div class="category">${esc(cat(p.category))}</div><div class="product-bottom"><span class="price">${money(p.price)}</span><button class="add" data-product="${esc(p.id)}" aria-label="${t("choose")} ${esc(names(p.names))}" ${!p.available ? "disabled" : ""}>+</button></div>${!p.available ? `<small>${t("unavailable")}</small>` : ""}</article>`,
+          `<article class="product reveal${!p.available ? " unavailable" : ""}"><button class="product-image" data-product="${esc(p.id)}" aria-label="${esc(names(p.names))}"><img src="${esc(p.image)}" alt="${esc(names(p.names))}" width="400" height="420" loading="lazy"></button><h3>${esc(names(p.names))}</h3>${p.promotion?`<p class="pill">${esc(names(p.promotion.titles))}${p.promotion.kind==="GIFT"?" · "+esc(names(p.promotion.gift)):" · −"+p.promotion.discount_bps/100+"%"}</p>`:""}<div class="category">${esc(cat(p.category))}</div><div class="product-bottom"><span class="price">${money(p.price)}</span><button class="add" data-product="${esc(p.id)}" aria-label="${t("choose")} ${esc(names(p.names))}" ${!p.available ? "disabled" : ""}>+</button></div>${!p.available ? `<small>${t("unavailable")}</small>` : ""}</article>`,
       )
       .join("") || `<div class="empty">${t("empty")}</div>`;
   reveal();
@@ -384,8 +388,10 @@ async function checkout() {
     return;
   }
   const v = state.vendor,
-    day = dayAt(v.timezone),
-    max = dayAt(v.timezone, 14);
+    today = dayAt(v.timezone),
+    max = dayAt(v.timezone, 14),
+    event = storage.get('deserto-occasion',{}),
+    day = event.day >= today && event.day <= max && state.cart.some(l=>l.note.endsWith(event.day)) ? event.day : today;
   modal(
     t("checkout"),
     `<div class="notice">${t("paymentNotice")}</div><form id="checkout-form"><div class="form-grid"><label class="field">${t("name")}<input name="name" autocomplete="name" maxlength="80" required></label><label class="field">${t("phone")}<input name="phone" type="tel" autocomplete="tel" maxlength="40" required></label><label class="field">${t("fulfillment")}<select name="fulfillment" id="fulfillment"><option value="pickup">${t("pickup")}</option>${v.delivery_enabled ? `<option value="delivery">${t("delivery")} · ${money(v.delivery_fee)}</option>` : ""}</select></label><label class="field">${t("method")}<select name="method"><option value="cash">${t("cash")}</option><option value="transfer">${t("transfer")}</option></select></label><label class="field">${t("day")}<input name="day" id="checkout-day" type="date" value="${day}" min="${day}" max="${max}" required></label><label class="field">${t("time")}<select name="minute" id="checkout-slot" required></select></label><label class="field span2" id="address-wrap" hidden>${t("address")}<input name="address" id="checkout-address" maxlength="300"></label><label class="field">${t("recipient")}<input name="recipient" maxlength="80"></label><label class="field">${t("recipientPhone")}<input name="recipient_phone" type="tel" maxlength="40"></label><label class="field span2">${t("comment")}<textarea name="comment" maxlength="500"></textarea></label></div><label class="small"><input type="checkbox" name="surprise"> ${t("surprise")}</label><div class="total-row"><span>${t("products")}</span><span>${money(sum())}</span></div><div class="total-row final"><span>${t("total")}</span><strong id="checkout-total">${money(sum())}</strong></div><p id="checkout-error" class="error" hidden></p><button class="primary full" id="checkout-submit">${t("submit")}</button></form>`,
@@ -565,6 +571,8 @@ async function renderCabinet() {
         : [
             "manageOrders",
             "manageCatalog",
+            "promotions",
+            ...(state.user.owner ? ["settlements"] : []),
             "settings",
             "team",
             "summary",
@@ -580,6 +588,8 @@ async function renderCabinet() {
     state.orders = data.orders;
     area.innerHTML = `<button class="secondary" data-act="admin-refresh">${t("refresh")}</button>${data.available.length ? `<h3>${t("availableDeliveries")}</h3>${data.available.map((o) => `<article class="admin-card">${esc(o.id)} · ${o.day} ${clock(o.minute)}<button class="secondary" data-claim="${o.id}">${t("claim")}</button></article>`).join("")}` : ""}${data.orders.map((o) => orderCard(o, true)).join("") || `<p class="empty">${t("emptyOrders")}</p>`}`;
   }
+  if (state.adminTab === "promotions") await renderPromotions(v,area);
+  if (state.adminTab === "settlements") await renderSettlements(v,area);
   if (state.adminTab === "manageCatalog") {
     const c = await api("manage/catalog?vendor=" + encodeURIComponent(v.id));
     state.products = c.products;
@@ -704,6 +714,16 @@ document.addEventListener(
     const b = Object.fromEntries(new FormData(form)),
       ns = { ru: b.name_ru, ka: b.name_ka, en: b.name_en };
     switch (form.id) {
+      case "promotion-form":
+        await api('manage/promotion',{command:crypto.randomUUID(),action:'propose',vendor_id:state.adminVendor,product_id:b.product_id,kind:b.kind,discount_bps:Math.round(Number(b.discount)*100),titles:Object.fromEntries(['ru','ka','en'].map(l=>[l,b['title_'+l]])),gift:Object.fromEntries(['ru','ka','en'].map(l=>[l,b['gift_'+l]]))});
+        closeModal();await renderCabinet();break;
+      case "promo-budget":
+      case "settlement-form": {
+        const expenses=Object.fromEntries(expenseKeys.map(k=>[k,Math.round(Number(b[k])*100)]));
+        const promo=form.id==='promo-budget';
+        await api(promo?'manage/promotion':'manage/settlement',{command:crypto.randomUUID(),vendor_id:state.adminVendor,action:'publish',id:form.dataset.id,order_id:form.dataset.order,version:Number(form.dataset.version),expenses,costs_confirmed:b.confirmed==='on',evidence:b.evidence});
+        closeModal();await renderCabinet();break;
+      }
       case "add-product":
         add(
           form.dataset.id,
@@ -831,6 +851,12 @@ document.addEventListener(
     const target = e.target.closest("button");
     if (!target) return;
     const d = target.dataset;
+    if(d.occasion) {storage.set('deserto-occasion',{...storage.get('deserto-occasion',{}),type:d.occasion});await occasionPage();return;}
+    if(d.eventOne) {addEventCakes(d.eventOne);return;}
+    if(d.eventCart) {closeModal();await shop(d.eventCart);history.replaceState(null,'',location.pathname+'#vendor='+encodeURIComponent(d.eventCart));cartModal();return;}
+    if(d.promoApprove) {expenseForm('promo-budget',promotionRows.find(p=>p.id===d.promoApprove));return;}
+    if(d.promoStop) {const p=promotionRows.find(p=>p.id===d.promoStop);await api('manage/promotion',{command:crypto.randomUUID(),vendor_id:state.adminVendor,id:p.id,version:p.version,action:'stop'});await renderCabinet();return;}
+    if(d.settle) {const o=settlementRows.find(o=>o.id===d.settle);expenseForm('settlement-form',{...o,version:o.record?.version||0});return;}
     if (d.product) {
       detail(d.product);
       return;
@@ -939,6 +965,9 @@ document.addEventListener(
       return;
     }
     switch (d.act) {
+      case 'occasion': await occasionPage();break;
+      case 'event-all': addEventCakes();break;
+      case 'new-promotion': promoForm();break;
       case "explore":
         $("shops").scrollIntoView({
           behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -1014,6 +1043,14 @@ document.addEventListener("input", (e) => {
 document.addEventListener(
   "change",
   busy(async (e) => {
+    if (['occasion-date','occasion-type'].includes(e.target.id)) storage.set('deserto-occasion',{type:$('occasion-type').value,day:$('occasion-date').value});
+    if (e.target.id === 'promo-kind') {
+      const gift=e.target.value==='GIFT';$('gift-fields').hidden=!gift;$('discount-fields').hidden=gift;
+      document.querySelectorAll('#gift-fields input').forEach(i=>i.required=gift);
+    }
+    if (e.target.matches('[data-event-choice]')) {
+      const c=occasionCatalogs.find(c=>c.vendor.id===e.target.dataset.eventChoice),p=c.products.find(p=>p.id===e.target.value),img=e.target.closest('article').querySelector('img');img.src=p.image;img.alt=names(p.names);
+    }
     if (e.target.id === "checkout-day") await updateSlots();
     if (e.target.id === "fulfillment") {
       $("address-wrap").hidden = e.target.value !== "delivery";
@@ -1065,7 +1102,8 @@ $("language").addEventListener(
     storage.set("deserto-language", state.lang);
     header();
     closeModal();
-    if (state.view === "admin") await cabinet();
+    if (state.view === "occasion") await occasionPage();
+    else if (state.view === "admin") await cabinet();
     else if (state.vendor) await shop(state.vendor.id);
     else await home();
   }),
@@ -1091,6 +1129,7 @@ $("credits").onclick = () =>
   );
 async function route() {
   const params = new URLSearchParams(location.hash.slice(1));
+  if (params.has("occasion")) {await occasionPage();return;}
   if (params.has("cabinet")) {
     await cabinet();
     return;
@@ -1109,6 +1148,52 @@ async function route() {
   await home();
 }
 window.addEventListener("hashchange", busy(route));
+let occasionCatalogs=[], promotionRows=[];
+async function occasionPage() {
+  closeModal();
+  state.view='occasion'; state.vendor=null; cartbar();
+  history.replaceState(null,'',location.pathname+'#occasion=1');
+  const vendors=(await api('vendors?city='+encodeURIComponent(state.city))).vendors;
+  occasionCatalogs=await Promise.all(vendors.map(v=>api('catalog?vendor='+encodeURIComponent(v.id))));
+  const event=storage.get('deserto-occasion',{});
+  $('main').innerHTML=`<section class="section"><button class="quiet" data-act="home">${t('back')}</button><h1 class="page-title">${t('occasion')}</h1><p>${t('occasionText')}</p><p class="small muted">${t('ranking')}</p><div class="form-grid"><label class="field">${t('occasion')}<select id="occasion-type">${['birthday','holiday','celebration'].map(k=>`<option value="${k}" ${event.type===k?'selected':''}>${t(k)}</option>`).join('')}</select></label><label class="field">${t('eventDate')}<input id="occasion-date" type="date" min="${dayAt('Asia/Tbilisi')}" max="${dayAt('Asia/Tbilisi',14)}" value="${esc(event.day||'')}" required></label></div><div class="vendor-grid">${occasionCatalogs.map(c=>{const cakes=c.products.filter(p=>p.category==='torty-celye'&&p.available>0);return `<article class="vendor-card"><h2>${esc(names(c.vendor.names))}</h2>${cakes.length?`<img class="event-photo" src="${esc(cakes[0].image)}" alt="${esc(names(cakes[0].names))}" loading="lazy"><label class="field">${t('products')}<select data-event-choice="${esc(c.vendor.id)}">${cakes.map(p=>`<option value="${esc(p.id)}">${esc(names(p.names))} · ${money(p.price,c.vendor.currency)}</option>`).join('')}</select></label><button class="primary" data-event-one="${esc(c.vendor.id)}">${t('eventOne')}</button>`:`<p>${t('noCakes')}</p>`}</article>`}).join('')}</div><div class="actions"><button class="primary" data-act="event-all">${t('oneEach')}</button></div><p class="notice">${t('eventCarts')}</p></section>`;
+  header();
+}
+function addEventCakes(vendorId) {
+  const date=$('occasion-date');
+  if(!date.reportValidity()) return;
+  const type=$('occasion-type').value,day=date.value;
+  storage.set('deserto-occasion',{type,day});
+  const chosen=[];
+  for(const c of occasionCatalogs.filter(x=>!vendorId||x.vendor.id===vendorId)) {
+    const select=document.querySelector(`[data-event-choice="${CSS.escape(c.vendor.id)}"]`);
+    const p=c.products.find(x=>x.id===select?.value&&x.available>0);
+    if(!p) continue;
+    const note=(t(type)+' · '+day).slice(0,120),key='deserto-cart:'+c.vendor.id;
+    if(storage.set(key,eventCart(storage.get(key,[]),p,note))) chosen.push(c);
+  }
+  modal(t('eventAdded'),`<p>${t('eventCarts')}</p>${chosen.map(c=>`<p><button class="secondary" data-event-cart="${esc(c.vendor.id)}">${esc(names(c.vendor.names))} · ${t('cart')}</button></p>`).join('')}`);
+}
+function promoForm() {
+ const eligible=state.products.filter(p=>p.active&&!p.options.length&&p.price>0);
+ modal(t('promoNew'),`<p class="notice">${t('promoHint')}</p><form id="promotion-form"><label class="field">${t('products')}<select name="product_id">${eligible.map(p=>`<option value="${esc(p.id)}">${esc(names(p.names))} · ${money(p.price)}</option>`).join('')}</select></label><label class="field">${t('promotions')}<select name="kind" id="promo-kind"><option value="DISCOUNT">${t('discount')}</option><option value="GIFT">${t('gift')}</option></select></label>${['ru','ka','en'].map(l=>`<label class="field">${t('promoTitle')} · ${l.toUpperCase()}<input name="title_${l}" maxlength="160" required></label>`).join('')}<div id="discount-fields"><label class="field">${t('discountPercent')}<input name="discount" type="number" min="0.01" max="90" step="0.01" value="5"></label></div><div id="gift-fields" hidden>${['ru','ka','en'].map(l=>`<label class="field">${t('giftTitle')} · ${l.toUpperCase()}<input name="gift_${l}" maxlength="160"></label>`).join('')}</div><button class="primary" ${eligible.length?'':'disabled'}>${t('promoNew')}</button></form>`);
+}
+function expenseForm(id,data) {
+ const promo=id==='promo-budget';
+ modal(t(promo?'budget':'actualCosts'),`<p class="notice">${t('marginHint')}</p><p>${promo?money(data.sale_price):money(data.total)}</p><form id="${id}" data-id="${esc(data.id)}" data-version="${data.version}" data-order="${esc(data.order_id||data.id)}"><div class="form-grid">${expenseKeys.map(k=>`<label class="field">${t(k)}, ₾<input name="${k}" type="number" min="0" max="1000000" step="0.01" required></label>`).join('')}</div><label class="field">${t('evidence')}<textarea name="evidence" maxlength="1000" required></textarea></label><p><label><input name="confirmed" type="checkbox" required> ${t('costsConfirmed')}</label></p><button class="primary">${t(promo?'approvePromo':'closeSettlement')}</button></form>`);
+}
+async function renderPromotions(v,area) {
+ const [data,c]=await Promise.all([api('manage/promotions?vendor='+encodeURIComponent(v.id)),api('manage/catalog?vendor='+encodeURIComponent(v.id))]);
+ promotionRows=data.promotions;state.products=c.products;
+ area.innerHTML=`<p class="notice">${t('promoHint')}</p><div class="actions"><button class="primary" data-act="new-promotion">${t('promoNew')}</button></div><p class="small">${t('discount')}: 5%, 10% · ${t('gift')}: ${t('giftTitle')}. ${t('marginHint')}</p>${data.promotions.map(p=>`<article class="admin-card"><span class="pill">${t(p.state==='ACTIVE'?'activePromo':p.state==='STOPPED'?'stopped':'proposed')}</span><h3>${esc(names(p.titles))}</h3><p>${p.kind==='DISCOUNT'?`${t('discount')} ${p.discount_bps/100}%`:`${t('gift')}: ${esc(names(p.gift))}`} · ${money(p.sale_price)}</p>${p.state==='PROPOSED'&&state.user.owner?`<button class="primary" data-promo-approve="${esc(p.id)}">${t('approvePromo')}</button>`:''}${p.state!=='STOPPED'?`<button class="secondary" data-promo-stop="${esc(p.id)}">${t('stopPromo')}</button>`:''}${p.budget?`<p>${t('forecast')}: ${money(p.budget.net)} · ${t('requiredNet')}: ${money(p.budget.required_net)}</p>`:''}</article>`).join('')}`;
+}
+let settlementRows=[];
+async function renderSettlements(v,area) {
+ const data=await api('manage/settlements?vendor='+encodeURIComponent(v.id));
+ settlementRows=data.orders.map(o=>({...o,record:data.records.find(r=>r.order_id===o.id)}));
+ area.innerHTML=`<p class="notice">${t('marginHint')}</p>${settlementRows.map(o=>`<article class="admin-card"><h3>${esc(o.id)} · ${money(o.total)}</h3>${o.record?`<p>${t(o.record.state==='CLOSED'?'closedSettlement':'shortfall')}</p><p>${t('net')}: ${money(o.record.net)} · ${t('requiredNet')}: ${money(o.record.required_net)}</p>`:''}${o.record?.state==='CLOSED'?'':`<button class="primary" data-settle="${esc(o.id)}">${t('closeSettlement')}</button>`}</article>`).join('')||`<p>${t('noSettlements')}</p>`}`;
+}
+
 async function boot() {
   const [cities, session] = await Promise.all([api("cities"), api("session")]);
   state.cities = cities.cities;

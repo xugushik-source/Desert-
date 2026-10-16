@@ -1,3 +1,4 @@
+import { migrateLocal } from "./migrate-local.mjs";
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +12,7 @@ export async function buildPages(output = new URL('../dist/pages/', import.meta.
   // Fresh synthetic data only: never export an existing database or its users/orders.
   const db = new LocalD1();
   try {
-    db.exec(await fs.readFile(new URL('../migrations/0001_marketplace.sql', import.meta.url), 'utf8'));
+    migrateLocal(db);
     await seed(db);
     const snapshots = {};
     async function capture(route) {

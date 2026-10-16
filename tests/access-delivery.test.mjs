@@ -1,3 +1,4 @@
+import { migrateLocal } from "../tools/migrate-local.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -7,12 +8,7 @@ import { handle } from "../src/worker.mjs";
 const pass = "test-password-123456789";
 async function fixture() {
   const db = new LocalD1();
-  db.exec(
-    fs.readFileSync(
-      new URL("../migrations/0001_marketplace.sql", import.meta.url),
-      "utf8",
-    ),
-  );
+  migrateLocal(db);
   await seed(db);
   const users = {};
   for (const [email, role] of [

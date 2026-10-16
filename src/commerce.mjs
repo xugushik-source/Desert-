@@ -1,3 +1,4 @@
+import { listPromotions } from "./marketplace.mjs";
 import {
   fail,
   integer,
@@ -94,9 +95,10 @@ export async function catalog(db, id, admin = false) {
       id,
     ).all()
   ).results;
+  const {promotions}=await listPromotions(db,id);
   return {
     vendor: vendorPublic(v),
-    products: rows.map((p) => productPublic(p, admin)),
+    products: rows.map((p) => ({...productPublic(p, admin), promotion:promotions.find(x=>x.product_id===p.id)||null})),
   };
 }
 function validateDay(v, day) {
@@ -219,7 +221,10 @@ async function priceLines(db, vendor, items) {
       chosen.push(value);
     }
     chosen.sort();
-    const note = row.note === undefined ? "" : text(row.note, 120),
+    const campaign=await q(db,"SELECT * FROM promotions WHERE product_id=? AND state='ACTIVE'",p.id).first();
+    if(campaign && (p.price!==campaign.sale_price || options.length)) fail("PRICE_CHANGED",409);
+    const gift=campaign?.kind==='GIFT' ? " [Подарок: "+(jsonParse(campaign.gift,{}).ru||'')+"]" : '';
+    const note = (row.note === undefined ? "" : text(row.note, 120))+gift,
       key = JSON.stringify([p.id, chosen, note]);
     const existing = lines.find((l) => l.key === key);
     if (existing) {

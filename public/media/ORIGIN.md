@@ -1,0 +1,1 @@
+Product images extracted byte-for-byte from xugushik-source/SWEETHOUSE- index.html at a85f556104c688958d92fbd3a444861d0463a08d. Original attribution/licensing was not specified. Demo references only; confirm usage rights and actual seller assortment before public commercial launch. No food, portions or colours were generated or altered.

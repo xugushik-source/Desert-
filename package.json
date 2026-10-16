@@ -1,0 +1,17 @@
+{
+  "name": "deserto-marketplace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "node tools/dev.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "build": "wrangler deploy --dry-run --outdir dist"
+  },
+  "devDependencies": {
+    "wrangler": "4.92.0"
+  }
+}

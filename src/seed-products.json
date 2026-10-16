@@ -1,0 +1,434 @@
+[
+  {
+    "id": "medovik-slice",
+    "names": {
+      "ka": "თაფლის ტორტი",
+      "en": "Honey cake",
+      "ru": "Медовик"
+    },
+    "category": "torty-kusok",
+    "price": 1000,
+    "image": "/media/medovik-slice.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "red-velvet-slice",
+    "names": {
+      "ka": "წითელი ხავერდი",
+      "en": "Red velvet",
+      "ru": "Красный бархат"
+    },
+    "category": "torty-kusok",
+    "price": 1200,
+    "image": "/media/red-velvet-slice.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "cheesecake-slice",
+    "names": {
+      "ka": "ჩიზქეიქი",
+      "en": "Cheesecake",
+      "ru": "Чизкейк"
+    },
+    "category": "torty-kusok",
+    "price": 1200,
+    "image": "/media/cheesecake-slice.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "eclair",
+    "names": {
+      "ka": "ეკლერი",
+      "en": "Eclair",
+      "ru": "Эклер"
+    },
+    "category": "pirozhnye",
+    "price": 500,
+    "image": "/media/eclair.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "cappuccino2",
+    "names": {
+      "ka": "კაპუჩინო",
+      "en": "Cappuccino",
+      "ru": "Капучино"
+    },
+    "category": "kofe",
+    "price": 500,
+    "image": "/media/cappuccino2.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "croissant",
+    "names": {
+      "ka": "კრუასანი",
+      "en": "Croissant",
+      "ru": "Круассан"
+    },
+    "category": "pechenye",
+    "price": 600,
+    "image": "/media/croissant.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "napoleon-slice",
+    "names": {
+      "ka": "ნაპოლეონი",
+      "en": "Napoleon",
+      "ru": "Наполеон"
+    },
+    "category": "torty-kusok",
+    "price": 1000,
+    "image": "/media/napoleon-slice.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "carrot-slice",
+    "names": {
+      "ka": "სტაფილოს ტორტი",
+      "en": "Carrot cake",
+      "ru": "Морковный торт"
+    },
+    "category": "torty-kusok",
+    "price": 1100,
+    "image": "/media/carrot-slice.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "choco-slice",
+    "names": {
+      "ka": "შოკოლადის ტორტი",
+      "en": "Chocolate cake",
+      "ru": "Шоколадный торт"
+    },
+    "category": "torty-kusok",
+    "price": 1100,
+    "image": "/media/choco-slice.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "medovik-mini",
+    "names": {
+      "ka": "თაფლის ტორტი Mini",
+      "en": "Honey cake Mini",
+      "ru": "Медовик Mini"
+    },
+    "category": "torty-celye",
+    "price": 4000,
+    "image": "/media/medovik-mini.jpg",
+    "lead_minutes": 1440
+  },
+  {
+    "id": "medovik-classic",
+    "names": {
+      "ka": "თაფლის ტორტი Classic",
+      "en": "Honey cake Classic",
+      "ru": "Медовик Classic"
+    },
+    "category": "torty-celye",
+    "price": 7000,
+    "image": "/media/medovik-classic.jpg",
+    "lead_minutes": 1440
+  },
+  {
+    "id": "napoleon-whole",
+    "names": {
+      "ka": "ნაპოლეონი",
+      "en": "Napoleon",
+      "ru": "Наполеон"
+    },
+    "category": "torty-celye",
+    "price": 6000,
+    "image": "/media/napoleon-whole.jpg",
+    "lead_minutes": 1440
+  },
+  {
+    "id": "red-velvet-whole",
+    "names": {
+      "ka": "წითელი ხავერდი",
+      "en": "Red velvet",
+      "ru": "Красный бархат"
+    },
+    "category": "torty-celye",
+    "price": 6500,
+    "image": "/media/red-velvet-whole.jpg",
+    "lead_minutes": 1440
+  },
+  {
+    "id": "cheesecake-whole",
+    "names": {
+      "ka": "ჩიზქეიქი",
+      "en": "Cheesecake",
+      "ru": "Чизкейк"
+    },
+    "category": "torty-celye",
+    "price": 6500,
+    "image": "/media/cheesecake-whole.jpg",
+    "lead_minutes": 1440
+  },
+  {
+    "id": "carrot-whole",
+    "names": {
+      "ka": "სტაფილოს ტორტი",
+      "en": "Carrot cake",
+      "ru": "Морковный торт"
+    },
+    "category": "torty-celye",
+    "price": 6000,
+    "image": "/media/carrot-whole.jpg",
+    "lead_minutes": 1440
+  },
+  {
+    "id": "tartaletka",
+    "names": {
+      "ka": "ტარტალეტი",
+      "en": "Tartlet",
+      "ru": "Тарталетка"
+    },
+    "category": "pirozhnye",
+    "price": 600,
+    "image": "/media/tartaletka.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "beze",
+    "names": {
+      "ka": "მერენგი",
+      "en": "Meringue",
+      "ru": "Безе"
+    },
+    "category": "pirozhnye",
+    "price": 400,
+    "image": "/media/beze.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "kartoshka",
+    "names": {
+      "ka": "ნამცხვარი",
+      "en": "Potato cake (choco)",
+      "ru": "Пирожное «Картошка»"
+    },
+    "category": "pirozhnye",
+    "price": 500,
+    "image": "/media/kartoshka.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "cupcake",
+    "names": {
+      "ka": "კექსი",
+      "en": "Cupcake",
+      "ru": "Капкейк"
+    },
+    "category": "pirozhnye",
+    "price": 600,
+    "image": "/media/cupcake.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "profitroli",
+    "names": {
+      "ka": "პროფიტროლი",
+      "en": "Profiteroles",
+      "ru": "Профитроли (порция)"
+    },
+    "category": "pirozhnye",
+    "price": 800,
+    "image": "/media/profitroli.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "cookie-sand",
+    "names": {
+      "ka": "ქუქიზი",
+      "en": "Shortbread cookie",
+      "ru": "Песочное печенье"
+    },
+    "category": "pechenye",
+    "price": 300,
+    "image": "/media/cookie-sand.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "cookie-oat",
+    "names": {
+      "ka": "შვრიის ორცხობილა",
+      "en": "Oatmeal cookie",
+      "ru": "Овсяное печенье"
+    },
+    "category": "pechenye",
+    "price": 300,
+    "image": "/media/cookie-oat.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "cookie-choco",
+    "names": {
+      "ka": "შოკოლადიანი ორცხობილა",
+      "en": "Chocolate chip cookie",
+      "ru": "Печенье с шоколадом"
+    },
+    "category": "pechenye",
+    "price": 300,
+    "image": "/media/cookie-choco.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "cinnabon",
+    "names": {
+      "ka": "დარიჩინის ფუნთუშა",
+      "en": "Cinnamon roll",
+      "ru": "Булочка с корицей"
+    },
+    "category": "pechenye",
+    "price": 700,
+    "image": "/media/cinnabon.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "strudel",
+    "names": {
+      "ka": "შტრუდელი",
+      "en": "Strudel",
+      "ru": "Штрудель"
+    },
+    "category": "pechenye",
+    "price": 600,
+    "image": "/media/strudel.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "espresso",
+    "names": {
+      "ka": "ესპრესო",
+      "en": "Espresso",
+      "ru": "Эспрессо"
+    },
+    "category": "kofe",
+    "price": 300,
+    "image": "/media/espresso.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "americano",
+    "names": {
+      "ka": "ამერიკანო",
+      "en": "Americano",
+      "ru": "Американо"
+    },
+    "category": "kofe",
+    "price": 300,
+    "image": "/media/americano.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "latte",
+    "names": {
+      "ka": "ლატე",
+      "en": "Latte",
+      "ru": "Латте"
+    },
+    "category": "kofe",
+    "price": 500,
+    "image": "/media/latte.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "raf",
+    "names": {
+      "ka": "რაფ ყავა",
+      "en": "Raf coffee",
+      "ru": "Раф"
+    },
+    "category": "kofe",
+    "price": 600,
+    "image": "/media/raf.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "tea-black2",
+    "names": {
+      "ka": "შავი ჩაი",
+      "en": "Black tea",
+      "ru": "Чай чёрный"
+    },
+    "category": "chai2",
+    "price": 300,
+    "image": "/media/tea-black2.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "tea-green2",
+    "names": {
+      "ka": "მწვანე ჩაი",
+      "en": "Green tea",
+      "ru": "Чай зелёный"
+    },
+    "category": "chai2",
+    "price": 300,
+    "image": "/media/tea-green2.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "tea-herbal",
+    "names": {
+      "ka": "მცენარეული ჩაი",
+      "en": "Herbal tea",
+      "ru": "Травяной чай"
+    },
+    "category": "chai2",
+    "price": 400,
+    "image": "/media/tea-herbal.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "limonad2",
+    "names": {
+      "ka": "ლიმონათი",
+      "en": "Lemonade",
+      "ru": "Лимонад"
+    },
+    "category": "holodnye2",
+    "price": 500,
+    "image": "/media/limonad2.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "juice2",
+    "names": {
+      "ka": "წვენი",
+      "en": "Juice",
+      "ru": "Сок"
+    },
+    "category": "holodnye2",
+    "price": 500,
+    "image": "/media/medovik-slice.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "milkshake",
+    "names": {
+      "ka": "მილქშეიქი",
+      "en": "Milkshake",
+      "ru": "Милкшейк"
+    },
+    "category": "holodnye2",
+    "price": 800,
+    "image": "/media/milkshake.jpg",
+    "lead_minutes": 30
+  },
+  {
+    "id": "frappe",
+    "names": {
+      "ka": "ფრაპე",
+      "en": "Frappe",
+      "ru": "Фраппе"
+    },
+    "category": "holodnye2",
+    "price": 700,
+    "image": "/media/frappe.jpg",
+    "lead_minutes": 30
+  }
+]

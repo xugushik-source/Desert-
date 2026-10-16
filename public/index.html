@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fff8f1" />
+    <meta
+      name="description"
+      content="DESERTO — кондитерские вашего города. Торты, десерты и кофе от разных мастеров."
+    />
+    <title>DESERTO — кондитерские вашего города</title>
+    <link rel="stylesheet" href="/app.css" />
+    <script src="/app.js" type="module"></script>
+  </head>
+  <body>
+    <div class="curtain" aria-hidden="true"><span>DESERTO</span><i></i></div>
+    <div class="demo" id="demo"></div>
+    <header class="header">
+      <a class="brand" href="#">DESERTO<span id="brand-caption"></span></a>
+      <div class="header-actions">
+        <label class="city-select"
+          ><span id="city-label"></span
+          ><select id="city" aria-label="Город"></select></label
+        ><button class="quiet" id="my-orders"></button
+        ><button class="quiet" id="cabinet"></button
+        ><select id="language" aria-label="Language">
+          <option value="ru">RU</option>
+          <option value="ka">KA</option>
+          <option value="en">EN</option>
+        </select>
+      </div>
+    </header>
+    <main id="main"><div class="loading">DESERTO</div></main>
+    <footer>
+      <span class="footer-brand">DESERTO</span>
+      <p id="footer-text"></p>
+      <button class="quiet" id="credits"></button>
+    </footer>
+    <div class="cartbar" id="cartbar" hidden></div>
+    <div id="modal-root"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <noscript
+      ><p>
+        Для оформления включите JavaScript. Витрины тестовые, реальные заказы не
+        принимаются.
+      </p></noscript
+    >
+  </body>
+</html>

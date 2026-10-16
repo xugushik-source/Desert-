@@ -985,6 +985,10 @@ document.addEventListener(
         await renderCabinet();
         break;
       case "logout":
+        if (state.user?.auth_mode === "sites") {
+          location.assign("/signout-with-chatgpt?return_to=/");
+          return;
+        }
         await api("logout", {});
         state.user = null;
         await cabinet();

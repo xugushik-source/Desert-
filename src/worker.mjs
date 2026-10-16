@@ -135,7 +135,9 @@ export async function handle(req, env) {
     if (!env.DB) fail("DATABASE_UNAVAILABLE", 503);
     const db = env.DB,
       b = await payload(req),
-      user = await userSession(req, db);
+      user = env.PRIVATE_SITES_SESSION
+        ? await env.PRIVATE_SITES_SESSION(req, db)
+        : await userSession(req, db);
     if (p === "/api/session" && req.method === "GET")
       return reply({ user, bots: false });
     if (p === "/api/login" && b) return await login(req, db, b);

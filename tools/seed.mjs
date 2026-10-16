@@ -25,6 +25,23 @@ export async function createUser(
 export async function seed(db) {
   const current = await db.prepare("SELECT id FROM cities LIMIT 1").first();
   if (current) return;
+  const target = db,
+    statements = [];
+  db = {
+    prepare(sql) {
+      let statement = target.prepare(sql);
+      return {
+        bind(...values) {
+          statement = statement.bind(...values);
+          return this;
+        },
+        async run() {
+          statements.push(statement);
+        },
+      };
+    },
+  };
+
   const cities = [
     ["tbilisi", { ru: "Тбилиси", ka: "თბილისი", en: "Tbilisi" }],
     ["akhalkalaki", { ru: "Ахалкалаки", ka: "ახალქალაქი", en: "Akhalkalaki" }],
@@ -118,4 +135,5 @@ export async function seed(db) {
         .run();
     }
   }
+  await target.batch(statements);
 }

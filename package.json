@@ -12,6 +12,7 @@
     "build": "wrangler deploy --dry-run --outdir dist"
   },
   "devDependencies": {
+    "esbuild": "0.27.3",
     "wrangler": "4.92.0"
   }
 }

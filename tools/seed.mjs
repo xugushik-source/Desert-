@@ -43,8 +43,8 @@ export async function seed(db) {
   };
 
   const cities = [
-    ["tbilisi", { ru: "Тбилиси", ka: "თბილისი", en: "Tbilisi" }],
-    ["akhalkalaki", { ru: "Ахалкалаки", ka: "ახალქალაქი", en: "Akhalkalaki" }],
+    ["tbilisi", { ru: "Тбилиси", ka: "თბილისი", en: "Tbilisi", hy: "Թբիլիսի" }],
+    ["akhalkalaki", { ru: "Ахалкалаки", ka: "ახალქალაქი", en: "Akhalkalaki", hy: "Ախալքալաք" }],
   ];
   for (const [id, names] of cities)
     await db
@@ -60,6 +60,7 @@ export async function seed(db) {
         ru: "Знакомые десерты, торты и кофе. Демонстрационная кондитерская.",
         ka: "ნამცხვრები, ტორტები და ყავა. სადემონსტრაციო ვიტრინა.",
         en: "Cakes, pastries and coffee. Demonstration bakery.",
+        hy: "Ծանոթ աղանդերներ, տորթեր և սուրճ։ Ցուցադրական հրուշակարան։",
       },
     },
     {
@@ -70,6 +71,7 @@ export async function seed(db) {
         ru: "Шоколадные истории и десерты к особому случаю. Тестовый продавец.",
         ka: "შოკოლადი და დესერტები. სატესტო გამყიდველი.",
         en: "Chocolate stories for special occasions. Test seller.",
+        hy: "Շոկոլադե պատմություններ և աղանդերներ հատուկ առիթների համար։ Փորձնական վաճառող։",
       },
     },
     {
@@ -79,11 +81,13 @@ export async function seed(db) {
         ru: "Sweet House · Тбилиси",
         ka: "Sweet House · თბილისი",
         en: "Sweet House · Tbilisi",
+        hy: "Sweet House · Թբիլիսի",
       },
       description: {
         ru: "Отдельная тестовая витрина со своими ценами и остатками.",
         ka: "ცალკე სატესტო ვიტრინა საკუთარი ფასებითა და მარაგით.",
         en: "Independent test storefront with its own prices and stock.",
+        hy: "Առանձին փորձնական ցուցափեղկ՝ իր գներով և մնացորդներով։",
       },
     },
   ];
@@ -106,7 +110,7 @@ export async function seed(db) {
         ? [
             {
               id: "large",
-              names: { ru: "Большой объём", ka: "დიდი ზომა", en: "Large" },
+              names: { ru: "Большой объём", ka: "დიდი ზომა", en: "Large", hy: "Մեծ չափս" },
               delta: 100,
             },
           ]

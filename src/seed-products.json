@@ -4,7 +4,8 @@
     "names": {
       "ka": "თაფლის ტორტი",
       "en": "Honey cake",
-      "ru": "Медовик"
+      "ru": "Медовик",
+      "hy": "Մեղրով տորթ"
     },
     "category": "torty-kusok",
     "price": 1000,
@@ -16,7 +17,8 @@
     "names": {
       "ka": "წითელი ხავერდი",
       "en": "Red velvet",
-      "ru": "Красный бархат"
+      "ru": "Красный бархат",
+      "hy": "Կարմիր թավիշ"
     },
     "category": "torty-kusok",
     "price": 1200,
@@ -28,7 +30,8 @@
     "names": {
       "ka": "ჩიზქეიქი",
       "en": "Cheesecake",
-      "ru": "Чизкейк"
+      "ru": "Чизкейк",
+      "hy": "Չիզքեյք"
     },
     "category": "torty-kusok",
     "price": 1200,
@@ -40,7 +43,8 @@
     "names": {
       "ka": "ეკლერი",
       "en": "Eclair",
-      "ru": "Эклер"
+      "ru": "Эклер",
+      "hy": "Էկլեր"
     },
     "category": "pirozhnye",
     "price": 500,
@@ -52,7 +56,8 @@
     "names": {
       "ka": "კაპუჩინო",
       "en": "Cappuccino",
-      "ru": "Капучино"
+      "ru": "Капучино",
+      "hy": "Կապուչինո"
     },
     "category": "kofe",
     "price": 500,
@@ -64,7 +69,8 @@
     "names": {
       "ka": "კრუასანი",
       "en": "Croissant",
-      "ru": "Круассан"
+      "ru": "Круассан",
+      "hy": "Կրուասան"
     },
     "category": "pechenye",
     "price": 600,
@@ -76,7 +82,8 @@
     "names": {
       "ka": "ნაპოლეონი",
       "en": "Napoleon",
-      "ru": "Наполеон"
+      "ru": "Наполеон",
+      "hy": "Նապոլեոն"
     },
     "category": "torty-kusok",
     "price": 1000,
@@ -88,7 +95,8 @@
     "names": {
       "ka": "სტაფილოს ტორტი",
       "en": "Carrot cake",
-      "ru": "Морковный торт"
+      "ru": "Морковный торт",
+      "hy": "Գազարով տորթ"
     },
     "category": "torty-kusok",
     "price": 1100,
@@ -100,7 +108,8 @@
     "names": {
       "ka": "შოკოლადის ტორტი",
       "en": "Chocolate cake",
-      "ru": "Шоколадный торт"
+      "ru": "Шоколадный торт",
+      "hy": "Շոկոլադե տորթ"
     },
     "category": "torty-kusok",
     "price": 1100,
@@ -112,7 +121,8 @@
     "names": {
       "ka": "თაფლის ტორტი Mini",
       "en": "Honey cake Mini",
-      "ru": "Медовик Mini"
+      "ru": "Медовик Mini",
+      "hy": "Մեղրով տորթ Mini"
     },
     "category": "torty-celye",
     "price": 4000,
@@ -124,7 +134,8 @@
     "names": {
       "ka": "თაფლის ტორტი Classic",
       "en": "Honey cake Classic",
-      "ru": "Медовик Classic"
+      "ru": "Медовик Classic",
+      "hy": "Մեղրով տորթ Classic"
     },
     "category": "torty-celye",
     "price": 7000,
@@ -136,7 +147,8 @@
     "names": {
       "ka": "ნაპოლეონი",
       "en": "Napoleon",
-      "ru": "Наполеон"
+      "ru": "Наполеон",
+      "hy": "Նապոլեոն"
     },
     "category": "torty-celye",
     "price": 6000,
@@ -148,7 +160,8 @@
     "names": {
       "ka": "წითელი ხავერდი",
       "en": "Red velvet",
-      "ru": "Красный бархат"
+      "ru": "Красный бархат",
+      "hy": "Կարմիր թավիշ"
     },
     "category": "torty-celye",
     "price": 6500,
@@ -160,7 +173,8 @@
     "names": {
       "ka": "ჩიზქეიქი",
       "en": "Cheesecake",
-      "ru": "Чизкейк"
+      "ru": "Чизкейк",
+      "hy": "Չիզքեյք"
     },
     "category": "torty-celye",
     "price": 6500,
@@ -172,7 +186,8 @@
     "names": {
       "ka": "სტაფილოს ტორტი",
       "en": "Carrot cake",
-      "ru": "Морковный торт"
+      "ru": "Морковный торт",
+      "hy": "Գազարով տորթ"
     },
     "category": "torty-celye",
     "price": 6000,
@@ -184,7 +199,8 @@
     "names": {
       "ka": "ტარტალეტი",
       "en": "Tartlet",
-      "ru": "Тарталетка"
+      "ru": "Тарталетка",
+      "hy": "Տարտալետ"
     },
     "category": "pirozhnye",
     "price": 600,
@@ -196,7 +212,8 @@
     "names": {
       "ka": "მერენგი",
       "en": "Meringue",
-      "ru": "Безе"
+      "ru": "Безе",
+      "hy": "Բեզե"
     },
     "category": "pirozhnye",
     "price": 400,
@@ -208,7 +225,8 @@
     "names": {
       "ka": "ნამცხვარი",
       "en": "Potato cake (choco)",
-      "ru": "Пирожное «Картошка»"
+      "ru": "Пирожное «Картошка»",
+      "hy": "«Կարտոշկա» թխվածք"
     },
     "category": "pirozhnye",
     "price": 500,
@@ -220,7 +238,8 @@
     "names": {
       "ka": "კექსი",
       "en": "Cupcake",
-      "ru": "Капкейк"
+      "ru": "Капкейк",
+      "hy": "Քափքեյք"
     },
     "category": "pirozhnye",
     "price": 600,
@@ -232,7 +251,8 @@
     "names": {
       "ka": "პროფიტროლი",
       "en": "Profiteroles",
-      "ru": "Профитроли (порция)"
+      "ru": "Профитроли (порция)",
+      "hy": "Պրոֆիտրոլներ (բաժին)"
     },
     "category": "pirozhnye",
     "price": 800,
@@ -244,7 +264,8 @@
     "names": {
       "ka": "ქუქიზი",
       "en": "Shortbread cookie",
-      "ru": "Песочное печенье"
+      "ru": "Песочное печенье",
+      "hy": "Փխրուն թխվածքաբլիթ"
     },
     "category": "pechenye",
     "price": 300,
@@ -256,7 +277,8 @@
     "names": {
       "ka": "შვრიის ორცხობილა",
       "en": "Oatmeal cookie",
-      "ru": "Овсяное печенье"
+      "ru": "Овсяное печенье",
+      "hy": "Վարսակի թխվածքաբլիթ"
     },
     "category": "pechenye",
     "price": 300,
@@ -268,7 +290,8 @@
     "names": {
       "ka": "შოკოლადიანი ორცხობილა",
       "en": "Chocolate chip cookie",
-      "ru": "Печенье с шоколадом"
+      "ru": "Печенье с шоколадом",
+      "hy": "Շոկոլադով թխվածքաբլիթ"
     },
     "category": "pechenye",
     "price": 300,
@@ -280,7 +303,8 @@
     "names": {
       "ka": "დარიჩინის ფუნთუშა",
       "en": "Cinnamon roll",
-      "ru": "Булочка с корицей"
+      "ru": "Булочка с корицей",
+      "hy": "Դարչինով բուլկի"
     },
     "category": "pechenye",
     "price": 700,
@@ -292,7 +316,8 @@
     "names": {
       "ka": "შტრუდელი",
       "en": "Strudel",
-      "ru": "Штрудель"
+      "ru": "Штрудель",
+      "hy": "Շտրուդել"
     },
     "category": "pechenye",
     "price": 600,
@@ -304,7 +329,8 @@
     "names": {
       "ka": "ესპრესო",
       "en": "Espresso",
-      "ru": "Эспрессо"
+      "ru": "Эспрессо",
+      "hy": "Էսպրեսո"
     },
     "category": "kofe",
     "price": 300,
@@ -316,7 +342,8 @@
     "names": {
       "ka": "ამერიკანო",
       "en": "Americano",
-      "ru": "Американо"
+      "ru": "Американо",
+      "hy": "Ամերիկանո"
     },
     "category": "kofe",
     "price": 300,
@@ -328,7 +355,8 @@
     "names": {
       "ka": "ლატე",
       "en": "Latte",
-      "ru": "Латте"
+      "ru": "Латте",
+      "hy": "Լատտե"
     },
     "category": "kofe",
     "price": 500,
@@ -340,7 +368,8 @@
     "names": {
       "ka": "რაფ ყავა",
       "en": "Raf coffee",
-      "ru": "Раф"
+      "ru": "Раф",
+      "hy": "Ռաֆ սուրճ"
     },
     "category": "kofe",
     "price": 600,
@@ -352,7 +381,8 @@
     "names": {
       "ka": "შავი ჩაი",
       "en": "Black tea",
-      "ru": "Чай чёрный"
+      "ru": "Чай чёрный",
+      "hy": "Սև թեյ"
     },
     "category": "chai2",
     "price": 300,
@@ -364,7 +394,8 @@
     "names": {
       "ka": "მწვანე ჩაი",
       "en": "Green tea",
-      "ru": "Чай зелёный"
+      "ru": "Чай зелёный",
+      "hy": "Կանաչ թեյ"
     },
     "category": "chai2",
     "price": 300,
@@ -376,7 +407,8 @@
     "names": {
       "ka": "მცენარეული ჩაი",
       "en": "Herbal tea",
-      "ru": "Травяной чай"
+      "ru": "Травяной чай",
+      "hy": "Բուսական թեյ"
     },
     "category": "chai2",
     "price": 400,
@@ -388,7 +420,8 @@
     "names": {
       "ka": "ლიმონათი",
       "en": "Lemonade",
-      "ru": "Лимонад"
+      "ru": "Лимонад",
+      "hy": "Լիմոնադ"
     },
     "category": "holodnye2",
     "price": 500,
@@ -400,7 +433,8 @@
     "names": {
       "ka": "წვენი",
       "en": "Juice",
-      "ru": "Сок"
+      "ru": "Сок",
+      "hy": "Հյութ"
     },
     "category": "holodnye2",
     "price": 500,
@@ -412,7 +446,8 @@
     "names": {
       "ka": "მილქშეიქი",
       "en": "Milkshake",
-      "ru": "Милкшейк"
+      "ru": "Милкшейк",
+      "hy": "Միլքշեյք"
     },
     "category": "holodnye2",
     "price": 800,
@@ -424,7 +459,8 @@
     "names": {
       "ka": "ფრაპე",
       "en": "Frappe",
-      "ru": "Фраппе"
+      "ru": "Фраппе",
+      "hy": "Ֆրապե"
     },
     "category": "holodnye2",
     "price": 700,

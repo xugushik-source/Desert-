@@ -40,7 +40,8 @@ export async function buildPages(output = new URL('../dist/pages/', import.meta.
   const notices = {
     ru: 'Витрина GitHub Pages: каталог и корзина доступны. Оформление заказов и кабинет ожидают подключения сервера.',
     ka: 'GitHub Pages: კატალოგი და კალათა ხელმისაწვდომია. შეკვეთა და კაბინეტი ელოდება სერვერის დაკავშირებას.',
-    en: 'GitHub Pages: catalogue and basket available. Checkout and staff access await a connected server.'
+    en: 'GitHub Pages: catalogue and basket available. Checkout and staff access await a connected server.',
+    hy: 'GitHub Pages ցուցափեղկ. կատալոգը և զամբյուղը հասանելի են։ Պատվերի ձևակերպումն ու կաբինետը սպասում են սերվերի միացմանը։'
   };
   app = `import { pagesApi } from './pages-api.js';\n` + app;
   app = app.replace('async function api(path, body) {', 'async function api(path, body) { return pagesApi(path, body);');

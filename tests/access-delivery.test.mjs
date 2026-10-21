@@ -211,7 +211,7 @@ test("only owner creates cities, hidden shops; access revocation is immediate", 
 });
 test("all language keys and original photographs are present", async () => {
   const { words } = await import("../public/i18n.js");
-  for (const lang of ["ka", "en"])
+  for (const lang of ["ka", "en", "hy"])
     assert.deepEqual(
       Object.keys(words[lang]).sort(),
       Object.keys(words.ru).sort(),

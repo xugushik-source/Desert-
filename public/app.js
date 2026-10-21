@@ -1,6 +1,6 @@
 import {extraWords, expenseKeys, eventCart} from "./marketplace.js";
 import { words, categories, states } from "./i18n.js";
-for (const l of ['ru','ka','en']) Object.assign(words[l],extraWords[l]);
+for (const l of ['ru','ka','en','hy']) Object.assign(words[l],extraWords[l]);
 const $ = (id) => document.getElementById(id),
   esc = (v) =>
     String(v ?? "").replace(
@@ -33,7 +33,8 @@ const storage = {
   },
 };
 const state = {
-  lang: storage.get("deserto-language", "ru"),
+  // Saved choice first; otherwise the phone language (an Armenian phone opens in HY).
+  lang: storage.get("deserto-language", (navigator.languages || [navigator.language || ""]).map((l) => String(l).slice(0, 2).toLowerCase()).find((l) => ["ru", "ka", "en", "hy"].includes(l)) || "ru"),
   city: storage.get("deserto-city", ""),
   cities: [],
   vendors: [],
@@ -56,7 +57,7 @@ const t = (k) => words[state.lang][k] || words.ru[k] || k,
   status = (s) => states[state.lang][s] || t("status"),
   cat = (c) => categories[state.lang][c] || c;
 const money = (amount, currency = state.vendor?.currency || "GEL") =>
-  new Intl.NumberFormat({ ru: "ru-RU", ka: "ka-GE", en: "en-GB" }[state.lang], {
+  new Intl.NumberFormat({ ru: "ru-RU", ka: "ka-GE", en: "en-GB", hy: "hy-AM" }[state.lang], {
     style: "currency",
     currency,
     maximumFractionDigits: 2,
